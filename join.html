@@ -1,22 +1,128 @@
 <!DOCTYPE html>
 <html lang="ja">
-  <head>
-    <meta charset="UTF-8">
-    <title>Discord - サーバーに参加</title>
-    <meta name="theme-color" content="#5a8fc0">
-    <meta property="og:title" content="サーバーに参加">
-    <meta property="og:url" content="https://discord.gg/5bKTcRS9vf">
+
+<head>
+    <meta charset="utf-8">
+    <title>るーしーファンクラブ - サーバー状態確認</title>
+    <meta name="description" content="るーしーファンクラブのサーバー状況を確認します">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#a9ceec">
+    <meta property="og:url" content="">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="るーしーファンクラブ Status">
+    <meta property="og:description" content="るーしーファンクラブのサーバー状態の確認">
+    <meta property="og:site_name" content="るーしーファンクラブ">
+    <meta property="og:image" content="https://github.com/tls-client/join_button/raw/main/images/welcome.gif">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('https://github.com/tls-client/Axis/raw/main/image/white.png');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 90%;
+            width: 300px;
+        }
+
+        .error-message {
+            color: red;
+        }
+
+        .success-message {
+            color: cyan;
+        }
+
+        #sns-icons {
+            margin-top: 20px;
+        }
+
+        #sns-icons a {
+            margin: 0 10px;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        #sns-icons img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>るーしーファンクラブ Status</h1>
+        <p id="status-message"></p>
+        <iframe id="discord-widget" src="https://discord.com/widget?id=1323928024269193216&theme=dark" width="100%"
+            height="500" allowtransparency="true" frameborder="0"
+            sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
+
+        <div id="sns-icons">
+            <a href="https://discord.gg/5bKTcRS9vf" target="_blank">
+                <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png"
+                    alt="Discord">
+            </a>
+            <a href="https://twitter.com/razbeu" target="_blank">
+                <img src="//abs.twimg.com/favicons/twitter.3.ico" alt="X">
+            </a>
+            <a href="https://t.me/rucyfanclub" target="_blank">
+                <img src="https://fineproxy.org/wp-content/uploads/2023/08/Telegram-logo.png" alt="Telegram">
+            </a>
+            <a href="https://line.me/ti/g2/MWNWc3lpdm9P_u5FelU9yoRg2lyrH2WwGmTEsQ?utm_source=invitation&utm_medium=link_copy&utm_campaign=default" target="_blank">
+                <img src="https://github.com/tls-client/rucyfanclub/raw/main/image/LINE.png" alt="LINEオープンチャット">
+            </a>
+        </div>
+    </div>
+
     <script>
-      // ページ読み込み後にリダイレクト
-      window.onload = function () {
-        window.location.href = "https://discord.gg/5bKTcRS9vf";
-      };
+        function checkServerStatus() {
+            fetch('https://discord.com/api/guilds/1323928024269193216/widget.json')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch server status');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    updateStatusMessage('🟢サーバーは正常に動作しています', 'success-message');
+                })
+                .catch(error => {
+                    updateStatusMessage('❌サーバーが削除されています。避難所に移動して下さい https://discord.gg/bPC9JqW58N', 'error-message');
+                    document.getElementById('discord-widget').src = "https://ptb.discord.com/widget?id=1323928024269193216&theme=dark";
+                    document.querySelector('#sns-icons a[href="https://discord.gg/5bKTcRS9vf"]').href = "https://discord.gg/5bKTcRS9vf";
+                });
+        }
+
+        function updateStatusMessage(message, className) {
+            const statusMessageElement = document.getElementById('status-message');
+            statusMessageElement.textContent = message;
+            statusMessageElement.classList.add(className);
+        }
+
+        checkServerStatus();
+        setInterval(checkServerStatus, 60000);
+
+        document.querySelectorAll('#sns-icons a').forEach(icon => {
+            icon.addEventListener('click', event => {
+                event.preventDefault();
+                const url = icon.getAttribute('href');
+                window.open(url, '_blank');
+            });
+        });
     </script>
-  </head>
-  <body>
-    <p>
-      リダイレクト中です。自動転送されない場合は
-      <a href="https://discord.gg/5bKTcRS9vf">こちら</a>をクリックしてください。
-    </p>
-  </body>
+</body>
+
 </html>
